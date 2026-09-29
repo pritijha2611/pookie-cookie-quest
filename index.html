@@ -1,0 +1,3078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pookie's Cookie Quest</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background: #10251b;
+    overflow-x: hidden;
+    color: #24321f;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+/* =========================
+   START SCREEN
+========================= */
+
+#startScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    background:
+        radial-gradient(circle at 20% 20%, #fff7b2 0 5%, transparent 6%),
+        linear-gradient(#79d6ff 0%, #c8f3ff 48%, #76b852 49%, #315c2b 100%);
+}
+
+.start-card {
+    width: min(650px, 95vw);
+    background: rgba(255,255,255,0.96);
+    border-radius: 30px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 5px solid #f5c542;
+}
+
+.logo {
+    font-size: 4.5rem;
+    margin-bottom: 5px;
+}
+
+.start-card h1 {
+    font-size: 2.8rem;
+    color: #75451c;
+    margin-bottom: 8px;
+}
+
+.start-card .subtitle {
+    color: #55704d;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    text-align: left;
+    margin: 16px 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 7px;
+    color: #35522e;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 13px 15px;
+    border: 2px solid #a9c89e;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #f9fff7;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6eaa5e;
+}
+
+#streamGroup {
+    display: none;
+}
+
+.start-btn {
+    width: 100%;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffca28, #ff9f1c);
+    color: #4d2d0c;
+    font-weight: bold;
+    font-size: 1.25rem;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 0 7px 0 #d77d08;
+    transition: 0.15s;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+}
+
+.start-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 2px 0 #d77d08;
+}
+
+.instructions {
+    margin-top: 25px;
+    padding: 18px;
+    border-radius: 16px;
+    background: #eff9eb;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.instructions strong {
+    color: #5b8c45;
+}
+
+/* =========================
+   GAME SCREEN
+========================= */
+
+#gameScreen {
+    display: none;
+    min-height: 100vh;
+    background: #172c20;
+}
+
+.hud {
+    min-height: 78px;
+    background: rgba(255,255,255,0.97);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.hud-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #71431c;
+    margin-right: auto;
+}
+
+.hud-item {
+    background: #eff8eb;
+    border-radius: 12px;
+    padding: 8px 11px;
+    font-size: 0.83rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.hud-item span {
+    color: #6c421e;
+}
+
+.hud-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    background: #e6e6e6;
+    font-weight: bold;
+}
+
+/* =========================
+   FOREST WORLD
+========================= */
+
+#gameArea {
+    position: relative;
+    height: calc(100vh - 78px);
+    min-height: 520px;
+    overflow: hidden;
+    background:
+        linear-gradient(to bottom,
+            #74d7ff 0%,
+            #bdeeff 38%,
+            #d7f5b5 39%,
+            #7dbb5b 58%,
+            #4d813c 59%,
+            #315a2c 100%);
+}
+
+/* Sun */
+
+.sun {
+    position: absolute;
+    right: 8%;
+    top: 8%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ffe66d;
+    box-shadow: 0 0 35px #ffe66d;
+}
+
+/* Clouds */
+
+.cloud {
+    position: absolute;
+    width: 130px;
+    height: 42px;
+    background: rgba(255,255,255,0.75);
+    border-radius: 50px;
+}
+
+.cloud:before,
+.cloud:after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.cloud:before {
+    width: 65px;
+    height: 65px;
+    left: 18px;
+    top: -25px;
+}
+
+.cloud:after {
+    width: 75px;
+    height: 75px;
+    right: 13px;
+    top: -32px;
+}
+
+.cloud1 {
+    top: 13%;
+    left: 10%;
+}
+
+.cloud2 {
+    top: 25%;
+    left: 58%;
+    transform: scale(.75);
+}
+
+/* Forest trees */
+
+.tree {
+    position: absolute;
+    bottom: 85px;
+    font-size: 6rem;
+    filter: drop-shadow(3px 5px 2px rgba(0,0,0,.2));
+    user-select: none;
+}
+
+.tree1 { left: 2%; }
+.tree2 { left: 19%; font-size: 4.8rem; }
+.tree3 { left: 40%; font-size: 6.5rem; }
+.tree4 { left: 64%; font-size: 5rem; }
+.tree5 { left: 84%; font-size: 6rem; }
+
+/* Ground */
+
+.ground {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 90px;
+    background:
+        repeating-linear-gradient(
+            120deg,
+            #315d2d 0px,
+            #315d2d 12px,
+            #376933 12px,
+            #376933 20px
+        );
+    border-top: 7px solid #5e9c47;
+}
+
+/* Grass */
+
+.grass {
+    position: absolute;
+    bottom: 80px;
+    font-size: 1.5rem;
+}
+
+/* =========================
+   POOKIE
+========================= */
+
+#pookie {
+    position: absolute;
+
+    /*
+       IMPORTANT:
+       Pookie's vertical position is controlled with "bottom".
+       Larger bottom = higher in the air.
+       This fixes the previous inverted jump.
+    */
+
+    left: 12%;
+    bottom: 88px;
+
+    width: 72px;
+    height: 78px;
+
+    font-size: 4rem;
+    line-height: 78px;
+    text-align: center;
+
+    z-index: 30;
+    user-select: none;
+
+    transform: translateY(0);
+    will-change: transform;
+}
+
+.pookie-name {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,.9);
+    padding: 2px 7px;
+    border-radius: 8px;
+    font-size: .7rem;
+    font-weight: bold;
+    line-height: 16px;
+    color: #6d411c;
+}
+
+#pookie::after {
+    content: "🍪";
+    position: absolute;
+    font-size: 1.2rem;
+    right: -5px;
+    top: 12px;
+}
+
+/* =========================
+   COOKIES
+========================= */
+
+.cookie {
+    position: absolute;
+    z-index: 18;
+    font-size: 1.8rem;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,.25));
+    will-change: transform;
+}
+
+/*
+   Cookies are deliberately kept LOW.
+   Their bottom values are around 95px-180px,
+   so they remain near Pookie rather than high in the sky.
+*/
+
+.cookie.low1 {
+    bottom: 100px;
+}
+
+.cookie.low2 {
+    bottom: 125px;
+}
+
+.cookie.low3 {
+    bottom: 155px;
+}
+
+.cookie.low4 {
+    bottom: 180px;
+}
+
+/* =========================
+   OBSTACLES
+========================= */
+
+.obstacle {
+    position: absolute;
+    bottom: 83px;
+    right: -100px;
+    font-size: 3.5rem;
+    z-index: 25;
+    user-select: none;
+    will-change: right;
+}
+
+/* =========================
+   JUMP BUTTON
+========================= */
+
+#jumpButton {
+    position: absolute;
+    right: 25px;
+    bottom: 110px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,.8);
+    background: rgba(255,174,0,.9);
+    color: #4d2d0c;
+    font-weight: bold;
+    font-size: 1rem;
+    z-index: 80;
+    cursor: pointer;
+    box-shadow: 0 7px 0 rgba(150,80,0,.5);
+    touch-action: manipulation;
+}
+
+#jumpButton:active {
+    transform: translateY(5px);
+    box-shadow: 0 2px 0 rgba(150,80,0,.5);
+}
+
+/* =========================
+   QUESTION MODAL
+========================= */
+
+#questionModal,
+#levelModal,
+#gameOverModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(7,20,11,.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 20px;
+}
+
+.question-card,
+.level-card,
+.gameover-card {
+    width: min(680px, 96vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 25px;
+    padding: 28px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.5);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.question-header h2 {
+    color: #70421b;
+}
+
+.timer-box {
+    min-width: 115px;
+    text-align: center;
+}
+
+.timer-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #d85b27;
+}
+
+.timer-bar {
+    margin-top: 6px;
+    height: 10px;
+    background: #e6e6e6;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#timerFill {
+    height: 100%;
+    width: 100%;
+    background: #69a950;
+    transition: width .1s linear;
+}
+
+.question-text {
+    background: #f4faef;
+    border-radius: 15px;
+    padding: 22px;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.options {
+    display: grid;
+    gap: 11px;
+}
+
+.option {
+    border: 2px solid #b7d2ac;
+    background: #fbfffa;
+    border-radius: 13px;
+    padding: 13px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
+    transition: .15s;
+}
+
+.option:hover {
+    background: #edf8e9;
+    border-color: #78a965;
+}
+
+.option:disabled {
+    cursor: default;
+}
+
+.feedback {
+    margin-top: 15px;
+    min-height: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* =========================
+   LEVEL MODAL
+========================= */
+
+.level-card {
+    text-align: center;
+}
+
+.level-icon {
+    font-size: 4rem;
+}
+
+.level-card h2 {
+    color: #75451c;
+    font-size: 2rem;
+    margin: 10px 0;
+}
+
+.level-stats {
+    background: #f1f8ed;
+    border-radius: 15px;
+    padding: 18px;
+    margin: 18px 0;
+    line-height: 1.8;
+}
+
+.level-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 14px 22px;
+    background: #f6bd32;
+    color: #51310d;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 5px;
+}
+
+.level-btn.secondary {
+    background: #e2e7e0;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toast {
+    position: fixed;
+    left: 50%;
+    top: 100px;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(35,50,30,.95);
+    color: white;
+    padding: 13px 22px;
+    border-radius: 14px;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+    transition: .25s;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================
+   PAUSE
+========================= */
+
+#pauseOverlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.6);
+    z-index: 400;
+    color: white;
+    text-align: center;
+}
+
+.pause-box {
+    background: white;
+    color: #35432f;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width: 750px) {
+
+    .hud {
+        min-height: 110px;
+    }
+
+    .hud-title {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .hud-item {
+        font-size: .72rem;
+        padding: 6px 8px;
+    }
+
+    #gameArea {
+        height: calc(100vh - 110px);
+        min-height: 500px;
+    }
+
+    .start-card h1 {
+        font-size: 2.1rem;
+    }
+
+    .logo {
+        font-size: 3.5rem;
+    }
+
+    #pookie {
+        left: 18%;
+    }
+
+    .question-card {
+        padding: 20px;
+    }
+
+    .question-text {
+        font-size: 1.05rem;
+    }
+
+    .tree {
+        font-size: 4rem;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     START SCREEN
+========================= -->
+
+<section id="startScreen">
+
+    <div class="start-card">
+
+        <div class="logo">🐻🍪</div>
+
+        <h1>Pookie's Cookie Quest</h1>
+
+        <p class="subtitle">
+            Run through the forest, collect cookies and conquer academic challenges!
+        </p>
+
+        <div class="form-group">
+            <label for="playerName">Player Name</label>
+            <input
+                id="playerName"
+                type="text"
+                placeholder="Enter your name"
+                maxlength="30"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="grade">Select Grade</label>
+
+            <select id="grade">
+                <option value="">-- Select Grade --</option>
+                <option value="6">Grade 6</option>
+                <option value="7">Grade 7</option>
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="streamGroup">
+
+            <label for="stream">Select Stream</label>
+
+            <select id="stream">
+                <option value="">-- Select Stream --</option>
+                <option value="Science">Science</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Humanities">Humanities</option>
+            </select>
+
+        </div>
+
+        <button class="start-btn" onclick="startGame()">
+            🍪 START COOKIE QUEST 🍪
+        </button>
+
+        <div class="instructions">
+
+            <strong>🎮 How to Play</strong><br>
+
+            • Use <strong>↑ Arrow Up</strong> or <strong>Space</strong> to jump.<br>
+            • You can also use the big <strong>JUMP</strong> button.<br>
+            • Collect as many 🍪 cookies as possible.<br>
+            • Jump over hurdles to trigger academic questions.<br>
+            • Correct answers earn cookies and points.<br>
+            • Wrong answers cost one life.<br>
+            • If the timer reaches zero, the question disappears and you lose one life.<br>
+            • Each level has exactly <strong>10 questions</strong>.<br>
+            • There are <strong>3 lives</strong> per game.
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     GAME SCREEN
+========================= -->
+
+<section id="gameScreen">
+
+    <div class="hud">
+
+        <div class="hud-title">
+            🐻 Pookie's Cookie Quest
+        </div>
+
+        <div class="hud-item">
+            👤 <span id="hudName">Player</span>
+        </div>
+
+        <div class="hud-item">
+            🎓 <span id="hudGrade">Grade</span>
+        </div>
+
+        <div class="hud-item" id="hudStreamBox">
+            📚 <span id="hudStream">Stream</span>
+        </div>
+
+        <div class="hud-item">
+            🏆 Level <span id="hudLevel">1</span>
+        </div>
+
+        <div class="hud-item">
+            ⚡ <span id="hudSpeed">1×</span>
+        </div>
+
+        <div class="hud-item">
+            🍪 <span id="hudCookies">0</span>
+        </div>
+
+        <div class="hud-item">
+            ⭐ <span id="hudScore">0</span>
+        </div>
+
+        <div class="hud-item">
+            ❤️ <span id="hudLives">3</span>
+        </div>
+
+        <div class="hud-item">
+            ❓ <span id="hudProgress">0/10</span>
+        </div>
+
+        <button class="hud-btn" onclick="togglePause()">
+            ⏸ Pause
+        </button>
+
+        <button class="hud-btn" onclick="restartGame()">
+            🔄 Restart
+        </button>
+
+    </div>
+
+
+    <div id="gameArea">
+
+        <div class="sun"></div>
+
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+
+        <div class="tree tree1">🌲</div>
+        <div class="tree tree2">🌳</div>
+        <div class="tree tree3">🌲</div>
+        <div class="tree tree4">🌳</div>
+        <div class="tree tree5">🌲</div>
+
+        <div class="grass" style="left:5%;">🌱</div>
+        <div class="grass" style="left:28%;">🌿</div>
+        <div class="grass" style="left:48%;">🌱</div>
+        <div class="grass" style="left:72%;">🌿</div>
+        <div class="grass" style="left:92%;">🌱</div>
+
+        <div class="ground"></div>
+
+        <div id="world"></div>
+
+        <div id="pookie">
+
+            🐻
+
+            <div class="pookie-name">
+                Pookie
+            </div>
+
+        </div>
+
+        <button id="jumpButton">
+            ⬆️<br>JUMP
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUESTION MODAL
+========================= -->
+
+<div id="questionModal">
+
+    <div class="question-card">
+
+        <div class="question-header">
+
+            <h2>🪵 Hurdle Challenge!</h2>
+
+            <div class="timer-box">
+
+                <div class="timer-text">
+                    ⏱ <span id="timerText">20</span>s
+                </div>
+
+                <div class="timer-bar">
+                    <div id="timerFill"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="question-text" id="questionText">
+            Question goes here
+        </div>
+
+        <div class="options" id="optionsContainer"></div>
+
+        <div class="feedback" id="feedback"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     LEVEL MODAL
+========================= -->
+
+<div id="levelModal">
+
+    <div class="level-card">
+
+        <div class="level-icon">🏆</div>
+
+        <h2 id="levelModalTitle">
+            Level Complete!
+        </h2>
+
+        <div class="level-stats" id="levelStats"></div>
+
+        <div id="levelButtons"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     GAME OVER
+========================= -->
+
+<div id="gameOverModal">
+
+    <div class="gameover-card" style="text-align:center;">
+
+        <div style="font-size:4rem;">💔🍪</div>
+
+        <h2 style="font-size:2rem;color:#9c4225;margin:12px 0;">
+            Game Over!
+        </h2>
+
+        <p id="gameOverMessage"></p>
+
+        <div class="level-stats" id="finalStats"></div>
+
+        <button class="level-btn" onclick="restartGame()">
+            🔄 Play Again
+        </button>
+
+        <button class="level-btn secondary" onclick="backToStart()">
+            🏠 Main Menu
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PAUSE
+========================= -->
+
+<div id="pauseOverlay">
+
+    <div class="pause-box">
+
+        <div style="font-size:3rem;">⏸️</div>
+
+        <h2>Game Paused</h2>
+
+        <br>
+
+        <button class="level-btn" onclick="togglePause()">
+            ▶ Continue
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   GAME CONFIGURATION
+========================================================= */
+
+const LEVELS = {
+
+    1: {
+        name: "Easy",
+        speed: 1,
+        time: 20
+    },
+
+    2: {
+        name: "Medium",
+        speed: 1.25,
+        time: 30
+    },
+
+    3: {
+        name: "Hard",
+        speed: 1.5,
+        time: 40
+    },
+
+    4: {
+        name: "Very Difficult",
+        speed: 1.75,
+        time: 50
+    },
+
+    5: {
+        name: "Pro",
+        speed: 2,
+        time: 60
+    }
+
+};
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let playerName = "";
+let grade = "";
+let stream = "";
+
+let currentLevel = 1;
+
+let lives = 3;
+let score = 0;
+let cookies = 0;
+
+let questionsAnswered = 0;
+
+let levelQuestions = [];
+let currentQuestionIndex = 0;
+
+let questionActive = false;
+let gameRunning = false;
+let paused = false;
+
+let timerInterval = null;
+let questionStartTime = 0;
+let timerDuration = 0;
+
+let lastTime = 0;
+
+let obstacleActive = false;
+let obstacleX = 0;
+let nextObstacleTimer = 2.5;
+
+let cookiesArray = [];
+let cookieId = 0;
+
+let player = {
+
+    y: 0,
+    vy: 0,
+
+    onGround: true,
+
+    /*
+       Positive velocity means UP.
+       Gravity continuously reduces velocity.
+    */
+
+    jumpPower: 16,
+    gravity: 0.72
+
+};
+
+
+/* =========================================================
+   QUESTION BANK
+========================================================= */
+
+/*
+   Junior questions for Grades 6-10.
+   Questions increase in difficulty by level.
+*/
+
+const JUNIOR_BANK = {
+
+1: [
+    ["What is 12 × 8?", ["86","96","108","88"], 1],
+    ["Which planet is known as the Red Planet?", ["Earth","Mars","Venus","Jupiter"], 1],
+    ["Which word is a noun?", ["Run","Beautiful","Teacher","Quickly"], 2],
+    ["What is 3/4 of 20?", ["12","15","16","18"], 1],
+    ["Which gas do humans need for respiration?", ["Carbon dioxide","Oxygen","Nitrogen","Hydrogen"], 1],
+    ["What is the opposite of 'ancient'?", ["Old","Modern","Historic","Past"], 1],
+    ["How many sides does a hexagon have?", ["5","6","7","8"], 1],
+    ["Which organ pumps blood?", ["Lungs","Brain","Heart","Kidney"], 2],
+    ["What is 25% of 80?", ["15","20","25","30"], 1],
+    ["Which is a renewable source of energy?", ["Coal","Petroleum","Solar energy","Natural gas"], 2]
+],
+
+2: [
+    ["What is the HCF of 24 and 36?", ["4","6","8","12"], 3],
+    ["If x + 7 = 19, what is x?", ["10","11","12","13"], 2],
+    ["Which part of a plant carries water upward?", ["Phloem","Xylem","Stomata","Root hair"], 1],
+    ["Which sentence is in the past tense?", ["She sings.","She sang.","She will sing.","She is singing."], 1],
+    ["What is the perimeter of a square with side 9 cm?", ["18 cm","27 cm","36 cm","81 cm"], 2],
+    ["Which force pulls objects towards Earth?", ["Friction","Magnetic force","Gravity","Buoyancy"], 2],
+    ["What is the chemical symbol for oxygen?", ["Ox","O","Og","C"], 1],
+    ["A triangle has angles 60°, 60° and ___?", ["30°","45°","60°","90°"], 2],
+    ["Which layer protects Earth from much ultraviolet radiation?", ["Troposphere","Ozone layer","Mantle","Core"], 1],
+    ["What is the plural of 'criterion'?", ["Criterions","Criteria","Criterion","Criterias"], 1]
+],
+
+3: [
+    ["Solve: 2x + 5 = 17.", ["5","6","7","8"], 1],
+    ["What is the area of a triangle with base 10 cm and height 8 cm?", ["18 cm²","40 cm²","80 cm²","160 cm²"], 1],
+    ["Which process converts water vapour into liquid water?", ["Evaporation","Condensation","Sublimation","Melting"], 1],
+    ["Which blood cells help fight infection?", ["Red blood cells","White blood cells","Platelets","Plasma"], 1],
+    ["What is the square root of 144?", ["10","11","12","14"], 2],
+    ["Which literary device compares two things using 'like' or 'as'?", ["Metaphor","Simile","Irony","Alliteration"], 1],
+    ["What is the SI unit of force?", ["Joule","Newton","Watt","Pascal"], 1],
+    ["If a car travels 150 km in 3 hours, its average speed is:", ["30 km/h","40 km/h","50 km/h","60 km/h"], 2],
+    ["Which organelle is called the powerhouse of the cell?", ["Nucleus","Ribosome","Mitochondria","Vacuole"], 2],
+    ["What is the probability of getting a head when tossing a fair coin?", ["1","1/2","1/3","1/4"], 1]
+],
+
+4: [
+    ["If a:b = 3:5 and b = 25, find a.", ["10","12","15","18"], 2],
+    ["What is the value of 2³ × 2²?", ["16","32","64","128"], 1],
+    ["Which phenomenon explains the bending of light when it enters another medium?", ["Reflection","Refraction","Diffraction","Dispersion"], 1],
+    ["What is the pH of a neutral solution at room temperature?", ["0","5","7","14"], 2],
+    ["If the radius of a circle doubles, its area becomes:", ["2 times","3 times","4 times","8 times"], 2],
+    ["Which part of DNA carries hereditary information?", ["Sugar","Phosphate","Nitrogenous bases","Water"], 2],
+    ["What is the slope of y = 3x + 7?", ["3","7","10","21"], 0],
+    ["Which gas is mainly responsible for the greenhouse effect among these?", ["Oxygen","Carbon dioxide","Helium","Hydrogen"], 1],
+    ["What is the median of 4, 8, 10, 12, 16?", ["8","9","10","12"], 2],
+    ["What happens to pressure if volume decreases at constant temperature?", ["It decreases","It increases","It remains zero","It disappears"], 1]
+],
+
+5: [
+    ["If x² = 49 and x is positive, x equals:", ["5","6","7","8"], 2],
+    ["The sum of interior angles of a hexagon is:", ["540°","720°","900°","360°"], 1],
+    ["Which law states that pressure is inversely proportional to volume at constant temperature?", ["Ohm's law","Boyle's law","Newton's law","Faraday's law"], 1],
+    ["If the probability of an event is 0, the event is:", ["Certain","Likely","Impossible","Equally likely"], 2],
+    ["Which mathematical operation is the inverse of differentiation?", ["Multiplication","Integration","Division","Factorisation"], 1],
+    ["A body moving at constant velocity has acceleration:", ["Maximum","Zero","Negative","Infinite"], 1],
+    ["Which type of wave requires a medium to travel?", ["Mechanical wave","Light wave","Radio wave","Electromagnetic wave"], 0],
+    ["If two angles are supplementary and one is 115°, the other is:", ["55°","65°","75°","85°"], 1],
+    ["Which part of the brain mainly coordinates balance?", ["Cerebrum","Cerebellum","Medulla","Hypothalamus"], 1],
+    ["If the roots of a quadratic are equal, its discriminant is:", ["Positive","Negative","Zero","One"], 2]
+]
+
+};
+
+
+/* =========================================================
+   STREAM QUESTION BANKS
+========================================================= */
+
+const STREAM_BANK = {
+
+Science: {
+
+XI: {
+
+1: [
+["The SI unit of force is:",["Joule","Newton","Watt","Pascal"],1],
+["The basic unit of life is:",["Tissue","Cell","Organ","Organ system"],1],
+["The charge of an electron is:",["Positive","Negative","Neutral","Variable"],1],
+["Approximate value of g on Earth is:",["4.9 m/s²","9.8 m/s²","19.6 m/s²","98 m/s²"],1],
+["Which organelle is called the powerhouse of the cell?",["Nucleus","Mitochondria","Ribosome","Golgi body"],1],
+["The chemical symbol of sodium is:",["So","S","Na","Sn"],2],
+["Matter has:",["Only mass","Only volume","Mass and occupies space","Neither"],2],
+["Which is a linear function?",["y=2x+3","y=x²","y=x³","y=1/x"],0],
+["DNA primarily carries:",["Energy","Genetic information","Oxygen","Hormones"],1],
+["A vector quantity has:",["Only magnitude","Only direction","Magnitude and direction","Neither"],2]
+],
+
+2: [
+["Average speed equals:",["Distance × time","Total distance/total time","Time/distance","Velocity × time"],1],
+["Atomic number equals the number of:",["Neutrons","Protons","Nucleons","Shells"],1],
+["A covalent bond involves:",["Transfer of protons","Sharing of electrons","Loss of neutrons","Sharing of nuclei"],1],
+["Derivative of x² is:",["x","2x","x²","2"],1],
+["ATP is mainly associated with:",["Energy transfer","Protein digestion","DNA storage","Blood clotting"],0],
+["Newton's second law is represented by:",["F=ma","E=mc²","V=IR","P=VI"],0],
+["A neutral solution has pH approximately:",["1","5","7","14"],2],
+["Photosynthesis releases:",["Nitrogen","Oxygen","Hydrogen","Methane"],1],
+["The SI unit of energy is:",["Watt","Joule","Newton","Ampere"],1],
+["A catalyst generally:",["Is permanently consumed","Changes reaction rate","Changes atomic number","Stops all reactions"],1]
+],
+
+3: [
+["Maximum range of a projectile on level ground occurs at:",["30°","45°","60°","90°"],1],
+["At constant temperature, Boyle's law states pressure is:",["Directly proportional to volume","Inversely proportional to volume","Independent of volume","Equal to volume"],1],
+["Slope of a velocity-time graph represents:",["Distance","Speed","Acceleration","Momentum"],2],
+["Diffraction demonstrates the:",["Particle nature only","Wave nature of light/waves","Mass of light","Charge of light"],1],
+["The reactant consumed first in a reaction is called:",["Excess reagent","Limiting reagent","Catalyst","Solvent"],1],
+["Proteins are polymers of:",["Glucose","Amino acids","Fatty acids","Nucleotides"],1],
+["If velocity doubles, kinetic energy becomes:",["2 times","3 times","4 times","8 times"],2],
+["Integration is commonly described as the inverse of:",["Addition","Differentiation","Multiplication","Exponentiation"],1],
+["Maintenance of a stable internal environment is:",["Evolution","Homeostasis","Respiration","Mutation"],1],
+["Which has the highest energy among these?",["Radio waves","Microwaves","Visible light","Gamma rays"],3]
+],
+
+4: [
+["For the same kinetic energy, if mass becomes four times, speed becomes:",["Four times","Two times","Half","One-fourth"],2],
+["Boiling point of a liquid generally increases when external pressure:",["Decreases","Increases","Becomes zero","Does not exist"],1],
+["Magnetic quantum number describes:",["Energy level","Orbital orientation","Spin only","Atomic mass"],1],
+["Translation in protein synthesis converts:",["DNA to DNA","mRNA information into protein","Protein into RNA","ATP into DNA"],1],
+["Work done by a conservative force over a closed path is:",["Maximum","Minimum","Zero","Infinite"],2],
+["Constructive interference occurs when path difference is:",["nλ","(n+1/2)λ","λ/4","Zero only"],0],
+["The equilibrium constant of a reaction changes with:",["Pressure only","Temperature","Catalyst only","Volume only"],1],
+["The fundamental theorem of calculus connects:",["Limits and sets","Differentiation and integration","Matrices and vectors","Probability and statistics"],1],
+["A mutation in germ cells can potentially be:",["Inherited","Always harmless","Never inherited","Only physical"],0],
+["Electric field inside an ideal conductor in electrostatic equilibrium is:",["Maximum","Zero","Infinite","Variable"],1]
+],
+
+5: [
+["In SHM, acceleration is:",["In direction of displacement","Opposite to displacement","Always zero","Constant"],1],
+["Carnot efficiency depends on:",["Mass of engine","Source and sink temperatures","Colour of engine","Pressure only"],1],
+["Heisenberg's principle relates uncertainty in position to uncertainty in:",["Mass","Momentum","Charge","Temperature"],1],
+["Electron diffraction supports the:",["Wave nature of matter","Theory of combustion","Law of conservation of charge","Particle-only model"],0],
+["The unit of a second-order rate constant is:",["s⁻¹","L mol⁻¹ s⁻¹","mol L⁻¹","L² mol⁻²"],1],
+["Hardy-Weinberg equilibrium assumes:",["Very small population only","No evolutionary forces acting","Constant mutation","Only asexual reproduction"],1],
+["A spontaneous process at constant temperature and pressure has Gibbs free energy change:",["Positive","Zero always","Negative","Infinite"],2],
+["Faraday's law concerns:",["Electromagnetic induction","Gravitation","Radioactive decay","Fluid pressure"],0],
+["de Broglie wavelength is inversely proportional to:",["Mass only","Momentum","Energy only","Charge"],1],
+["Mass-energy equivalence is represented by:",["F=ma","E=mc²","V=IR","P=VI"],1]
+]
+
+},
+
+XII: {
+
+1: [
+["The dimensional formula of force is:",["MLT⁻²","ML²T⁻¹","M⁰LT⁻¹","ML⁻¹T²"],0],
+["Electric current is measured in:",["Volt","Ampere","Ohm","Watt"],1],
+["The functional unit of the kidney is:",["Neuron","Nephron","Alveolus","Villus"],1],
+["The process by which plants lose water vapour is:",["Transpiration","Respiration","Digestion","Filtration"],0],
+["The SI unit of electric charge is:",["Ampere","Coulomb","Volt","Ohm"],1],
+["A semiconductor has conductivity between that of:",["Copper and silver","Conductor and insulator","Iron and steel","Water and air"],1],
+["The hormone insulin is secreted by:",["Liver","Pancreas","Kidney","Thyroid"],1],
+["The derivative of sin x is:",["cos x","-cos x","sin x","tan x"],0],
+["The pH of a strong acid solution is generally:",["High","Low","Exactly 7","Always 14"],1],
+["The nucleus of an atom contains:",["Electrons only","Protons and neutrons","Neutrons only","Electrons and protons"],1]
+],
+
+2: [
+["Ohm's law is:",["V=IR","F=ma","P=VI only","Q=mc²"],0],
+["The electric field due to a point charge varies as:",["r","r²","1/r²","1/r"],2],
+["The derivative of eˣ is:",["x eˣ","eˣ","1/eˣ","x"],1],
+["The powerhouse of a cell is:",["Ribosome","Mitochondria","Lysosome","Nucleus"],1],
+["DNA replication is generally:",["Conservative","Semi-conservative","Dispersive only","Random"],1],
+["A catalyst lowers:",["Temperature","Activation energy","Atomic number","Molecular mass"],1],
+["The SI unit of magnetic field is:",["Tesla","Weber","Henry","Coulomb"],0],
+["The pH scale is logarithmic with respect to:",["OH⁻ only","Hydrogen ion concentration","Temperature only","Mass"],1],
+["The process of formation of gametes is:",["Glycolysis","Gametogenesis","Translation","Transcription"],1],
+["The area under a velocity-time graph gives:",["Acceleration","Displacement","Force","Power"],1]
+],
+
+3: [
+["In a series circuit, the current through each resistor is:",["Different always","The same","Zero","Infinite"],1],
+["The electric potential inside an ideal conductor in electrostatic equilibrium is:",["Always zero","Constant","Infinite","Changing rapidly"],1],
+["The rate of change of momentum gives:",["Force","Energy","Power","Work"],0],
+["The genetic material in most organisms is:",["Protein","DNA","Lipid","Carbohydrate"],1],
+["The enzyme that joins DNA fragments is:",["Ligase","Amylase","Lipase","Pepsin"],0],
+["The integral of 2x dx is:",["x²+C","2x²+C","x+C","x³+C"],0],
+["A solution with pH 3 is:",["Acidic","Basic","Neutral","Always saturated"],0],
+["The SI unit of power is:",["Joule","Watt","Newton","Pascal"],1],
+["A transformer works on:",["Electromagnetic induction","Electrolysis","Photoelectric effect","Diffusion"],0],
+["Natural selection acts directly on:",["Phenotypes","Only genes","Only chromosomes","Atoms"],0]
+],
+
+4: [
+["The electric flux through a closed surface is related to:",["Gauss's law","Ohm's law","Faraday's law only","Hooke's law"],0],
+["The photoelectric effect supports the:",["Wave-only nature of light","Particle nature of light","Classical fluid theory","Nuclear shell model"],1],
+["In a perfectly elastic collision, total kinetic energy is:",["Lost","Conserved","Doubled","Zero"],1],
+["The central dogma describes information flow from:",["RNA → DNA → protein","DNA → RNA → protein","Protein → DNA → RNA","DNA → protein → DNA"],1],
+["The derivative of ln x is:",["x","1/x","ln x","eˣ"],1],
+["A first-order reaction has rate constant unit:",["mol L⁻¹","s⁻¹","L mol⁻¹ s⁻¹","mol² L⁻²"],1],
+["The wavelength of matter according to de Broglie is:",["Directly proportional to momentum","Inversely proportional to momentum","Independent of momentum","Equal to mass"],1],
+["The functional group in alcohols is:",["-COOH","-OH","-CHO","-NH₂"],1],
+["The genetic cross Aa × Aa gives probability of aa:",["0","1/4","1/2","3/4"],1],
+["The process of mRNA formation from DNA is:",["Translation","Transcription","Replication","Mutation"],1]
+],
+
+5: [
+["According to Gauss's law, electric flux is proportional to:",["Enclosed charge","Surface colour","Mass only","Temperature only"],0],
+["The energy of a photon is:",["E=mc²","E=hf","E=IR","E=ma"],1],
+["For a second-order reaction, half-life generally depends on:",["Initial concentration","Only temperature","Only pressure","Atomic number"],0],
+["In genetics, crossing over occurs during:",["Prophase I of meiosis","Prophase of mitosis","Telophase II only","G1 phase"],0],
+["The Gibbs free energy criterion for spontaneity at constant T and P is:",["ΔG < 0","ΔG > 0","ΔG = infinite","ΔG = 100"],0],
+["The resolving power of an optical instrument improves when wavelength:",["Increases","Decreases","Becomes zero only","Is irrelevant"],1],
+["The magnetic force on a charged particle is maximum when velocity and magnetic field are:",["Parallel","Perpendicular","Identical","Opposite only"],1],
+["In an ideal LC oscillator, energy alternates between:",["Electric and magnetic fields","Heat and sound","Chemical and nuclear forms","Mass and volume"],0],
+["The Michaelis-Menten equation describes:",["Enzyme kinetics","Population growth only","Gas pressure","Nuclear decay"],0],
+["The entropy of an isolated system in a spontaneous process generally:",["Decreases","Increases","Becomes exactly zero","Remains negative"],1]
+]
+
+},
+
+},
+
+Commerce: {
+
+XI: {
+
+1: [
+["The accounting equation is:",["A=L+C","A=L-C","A=C-L","L=A+C"],0],
+["The study of scarce resources is:",["History","Economics","Biology","Geography"],1],
+["The first function of management is:",["Planning","Controlling","Staffing","Directing"],0],
+["A person who starts and organises a business is an:",["Employee","Entrepreneur","Consumer","Auditor"],1],
+["A nominal account generally relates to:",["Expenses and incomes","Assets only","Liabilities only","Capital only"],0],
+["Demand refers to quantity consumers are:",["Willing and able to buy","Forced to buy","Unable to buy","Always selling"],0],
+["A bank loan is generally a:",["Liability","Revenue","Expense","Drawing"],0],
+["Cash is classified as a:",["Current asset","Fixed liability","Capital reserve","Long-term expense"],0],
+["Profit equals:",["Revenue - Expenses","Assets - Sales","Capital - Liabilities","Expenses - Revenue"],0],
+["A market facilitates:",["Exchange","Only production","Only taxation","Only banking"],0]
+],
+
+2: [
+["If assets are ₹5 lakh and liabilities ₹2 lakh, capital is:",["₹2 lakh","₹3 lakh","₹7 lakh","₹10 lakh"],1],
+["The next best alternative foregone is:",["Marginal cost","Opportunity cost","Fixed cost","Sunk cost"],1],
+["Current ratio compares:",["CA and CL","Fixed assets and capital","Sales and profit","Debt and equity"],0],
+["Journal is known as the:",["Book of original entry","Ledger only","Final account","Cash book only"],0],
+["According to law of demand, other things equal, price and demand are generally:",["Directly related","Inversely related","Unrelated always","Equal"],1],
+["The function of management that checks actual performance against standards is:",["Planning","Controlling","Staffing","Organising"],1],
+["Creditors are generally:",["Current liabilities","Fixed assets","Revenue","Drawings"],0],
+["A budget is a:",["Future financial plan","Past balance sheet","Bank statement","Tax return"],0],
+["Rent of a factory is usually:",["Fixed cost","Variable cost","Direct material","Profit"],0],
+["National income measures the value of:",["Final goods and services","Only imports","Only raw materials","Only shares"],0]
+],
+
+3: [
+["A common ideal current ratio is:",["1:1","2:1","3:1","1:2"],1],
+["Depreciation represents:",["Decrease in value of fixed asset","Increase in cash","Increase in capital","Revenue from sales"],0],
+["Demand is elastic when percentage change in quantity demanded is:",["Greater than percentage change in price","Zero","Always one","Less than zero"],0],
+["Equity shareholders are:",["Owners of the company","Creditors","Employees","Customers"],0],
+["Balance Sheet shows:",["Financial position","Only profit","Only cash","Only sales"],0],
+["Marginal cost is the cost of producing:",["One additional unit","All units","No units","Only fixed assets"],0],
+["Unity of command means an employee should receive orders from:",["One superior","Many superiors","Customers only","Government"],0],
+["Inflation refers to:",["General rise in price level","Fall in all prices","Increase in production only","Decrease in money supply only"],0],
+["Gross profit equals:",["Sales - Cost of goods sold","Sales - Salary only","Capital - Drawings","Assets - Liabilities"],0],
+["Trial balance primarily helps check:",["Arithmetic accuracy","Profit maximisation","Market demand","Tax rates"],0]
+],
+
+4: [
+["Perfectly inelastic demand means quantity demanded:",["Does not change with price","Changes infinitely","Doubles always","Becomes zero"],0],
+["Securities premium arises when shares are issued:",["Above face value","Below face value","At zero value","Only for cash"],0],
+["Break-even point occurs when:",["TR = TC","TR > TC","TR < TC","Profit is maximum"],0],
+["Fiscal policy mainly concerns:",["Government revenue and expenditure","Bank employee salaries","Company dividends","Consumer preferences"],0],
+["Cash flows are commonly classified into:",["Operating, investing, financing","Profit, loss, capital","Assets, liabilities, equity","Debit, credit, balance"],0],
+["Working capital equals:",["Current assets - Current liabilities","Fixed assets - liabilities","Sales - expenses","Capital - drawings"],0],
+["A profit-maximising firm generally considers the condition:",["MR = MC","AR = 0","TC = 0","MC = 0 always"],0],
+["Delegation does not remove the manager's:",["Ultimate accountability","Office","Salary","Title"],0],
+["Debt-equity ratio compares:",["Debt and shareholders' funds","Sales and profit","Assets and expenses","Cash and stock"],0],
+["Consumer surplus is the difference between:",["Willingness to pay and actual price","Cost and revenue","Sales and profit","Assets and liabilities"],0]
+],
+
+5: [
+["Real GDP can be calculated from nominal GDP and GDP deflator as:",["Nominal GDP/deflator ×100","Nominal GDP × deflator","Deflator/nominal GDP","Nominal GDP + deflator"],0],
+["A perfectly competitive firm's demand curve is:",["Perfectly elastic","Perfectly inelastic","Unit elastic","Vertical"],0],
+["If marginal cost is below average cost, average cost generally:",["Falls","Rises","Becomes zero","Doubles"],0],
+["Present value is the current worth of a:",["Future amount","Past expense only","Fixed asset","Current liability"],0],
+["Quick ratio excludes:",["Inventory from current assets","Cash from assets","Creditors from liabilities","Capital from equity"],0],
+["Drawings by a proprietor generally:",["Decrease capital","Increase capital","Increase revenue","Decrease liabilities"],0],
+["Charging different prices to different consumers for the same product is:",["Price discrimination","Inflation","Deflation","Barter"],0],
+["Repo rate is associated with:",["Central bank lending to commercial banks","Income tax","Exports only","Share capital"],0],
+["Interest forgone on an alternative investment is an example of:",["Opportunity cost","Fixed cost","Accounting profit","Depreciation"],0],
+["Return on Equity measures return relative to:",["Shareholders' equity","Sales only","Inventory only","Current liabilities"],0]
+]
+
+},
+
+XII: {
+
+1: [
+["Goodwill is generally classified as:",["Intangible asset","Current liability","Revenue","Expense"],0],
+["A partnership deed generally contains:",["Terms of partnership","Only bank details","Only tax rates","Only sales"],0],
+["Issue of shares above face value creates:",["Securities premium","Goodwill expense","Capital loss","Revenue loss"],0],
+["The ratio in which existing partners sacrifice profit share for a new partner is called:",["Sacrificing ratio","Gaining ratio","Current ratio","Debt ratio"],0],
+["A Balance Sheet shows:",["Financial position","Only gross profit","Only cash sales","Only expenses"],0],
+["A debenture holder is generally a:",["Creditor","Owner","Partner","Customer"],0],
+["Revaluation Account is prepared at the time of:",["Change in partnership structure","Daily cash sale","Purchase of stationery","Bank reconciliation only"],0],
+["Cash Flow Statement classifies cash flows into:",["Operating, investing and financing","Assets and liabilities","Debit and credit","Profit and loss"],0],
+["Calls-in-arrears represents:",["Unpaid amount due on shares","Advance payment","Profit on shares","Dividend received"],0],
+["A company's shareholders are its:",["Owners","Creditors only","Employees only","Auditors"],0]
+],
+
+2: [
+["If a new partner brings goodwill in cash, it is generally credited to:",["Old partners in sacrificing ratio","New partner only","Creditors","Bank only"],0],
+["The ratio used to compensate gaining partners is:",["Gaining ratio","Sacrificing ratio","Current ratio","Debt ratio"],0],
+["Forfeiture of shares may occur when a shareholder fails to pay:",["Calls due","Dividend only","Salary","Tax only"],0],
+["A company's balance sheet primarily presents:",["Financial position","Cash transactions only","Sales forecast","Production schedule"],0],
+["A provision for doubtful debts is made against:",["Debtors","Creditors","Capital","Bank loan"],0],
+["Current ratio is calculated as:",["Current Assets/Current Liabilities","Current Liabilities/Current Assets","Sales/Assets","Profit/Capital"],0],
+["In a cash flow statement, purchase of machinery is generally:",["Investing activity","Operating activity","Financing activity","Non-cash revenue"],0],
+["Preference shareholders generally have preference regarding:",["Dividend and repayment of capital","Management control only","Trade discounts","Wages"],0],
+["Interest on drawings is:",["Income for the firm","Expense for the firm","Asset purchase","Liability only"],0],
+["A partnership is dissolved when:",["Relationship among all partners ends","One invoice is unpaid","One customer leaves","Cash balance changes"],0]
+],
+
+3: [
+["A share issued at ₹10 for ₹12 is issued at:",["Premium","Discount","Par only","Loss"],0],
+["The amount transferred from capital reserve for underwriting is:",["As permitted by law/terms","Always revenue","Always drawings","Never possible"],0],
+["Goodwill represents the value of:",["Business reputation and earning capacity","Cash only","Inventory only","Land only"],0],
+["The ratio showing debt relative to equity is:",["Debt-equity ratio","Current ratio","Quick ratio","Gross profit ratio"],0],
+["A fixed asset purchased in exchange for shares involves:",["Non-cash consideration","Cash purchase only","Revenue expenditure","Drawings"],0],
+["Net profit before appropriation is transferred to:",["Profit and Loss Appropriation Account","Cash Book only","Revaluation Account","Trading Account"],0],
+["A partner's capital account may be:",["Fixed or fluctuating","Only fixed","Only zero","Only current liability"],0],
+["Interest on partner's capital is generally allowed:",["As per partnership agreement/Partnership Act provisions","Always regardless of agreement","Never","Only by customers"],0],
+["A cash flow from issue of shares is generally:",["Financing activity","Operating activity","Investing activity","Non-cash activity"],0],
+["A ratio of 2:1 means:",["First part is twice second","Second is twice first","Both are unequal but unknown","Both are zero"],0]
+],
+
+4: [
+["When shares are forfeited, share capital is debited with:",["Amount called up","Amount received","Securities premium only","Profit"],0],
+["A partner's current account under fixed capital method records:",["Drawings, interest and profit share etc.","Original capital only","Only cash purchases","Only assets"],0],
+["The main objective of financial management is generally:",["Efficient procurement and use of funds","Maximising employees only","Avoiding all investment","Increasing expenses"],0],
+["Dividend paid is generally classified as:",["Financing cash flow under common school-level treatment","Operating asset","Inventory","Fixed asset"],0],
+["The excess of current assets over current liabilities is:",["Working capital","Gross profit","Capital reserve","Goodwill"],0],
+["A debenture is evidence of:",["Debt","Ownership","Inventory","Revenue"],0],
+["If a partner retires, the gaining ratio is relevant for adjustment of:",["Goodwill","Sales tax","Wages","Inventory only"],0],
+["A company's issue of debentures for cash creates:",["Financing inflow","Operating outflow","Investing outflow","No cash flow"],0],
+["The ratio of current assets to current liabilities is:",["Current ratio","Quick ratio","Debt ratio","Return ratio"],0],
+["A balance sheet must satisfy:",["Assets = Equity + Liabilities","Assets = Sales + Profit","Liabilities = Sales","Capital = Revenue"],0]
+],
+
+5: [
+["The intrinsic value of goodwill under super profit method depends on:",["Super profit and capitalisation rate","Only cash","Only inventory","Only sales"],0],
+["In a partnership, guarantee of profit may require adjustment between:",["Partners and firm/partners as agreed","Customers only","Creditors only","Government only"],0],
+["A higher debt-equity ratio generally indicates:",["Greater reliance on debt relative to equity","No liabilities","No capital","Higher cash only"],0],
+["Net Present Value compares present value of inflows with:",["Present value of investment/outflows","Sales only","Inventory only","Capital reserve"],0],
+["If a share is forfeited and later reissued at a discount, the discount cannot generally exceed:",["Amount forfeited on that share","Face value always","Securities premium","Dividend"],0],
+["Cash generated from operations is primarily related to:",["Operating activities","Financing activities only","Investing activities only","Share issue only"],0],
+["The break-even point is reached when contribution equals:",["Fixed cost","Variable cost","Sales commission","Goodwill"],0],
+["Return on investment is generally measured by:",["Return relative to investment","Debt relative to equity","Assets relative to liabilities","Sales relative to stock"],0],
+["A company's maximum amount of authorised share capital is specified in its:",["Capital clause of constitutional documents","Cash book","Trial balance","Purchase book"],0],
+["A change in profit-sharing ratio among existing partners requires adjustment of:",["Sacrificing and gaining ratios","Only current ratio","Only debt ratio","Only sales"],0]
+]
+
+},
+
+},
+
+Humanities: {
+
+XI: {
+
+1: [
+["History is primarily concerned with the study of:",["The past","Only geography","Only mathematics","Future weather"],0],
+["The Equator is located at:",["0° latitude","90° latitude","23.5°N","66.5°S"],0],
+["Democracy literally relates to:",["Rule by the people","Rule by one king","Rule by army","Rule by judges"],0],
+["The Constitution is generally regarded as the:",["Supreme law of a country","Daily newspaper","Tax register","Business plan"],0],
+["The largest ocean is:",["Atlantic","Indian","Pacific","Arctic"],2],
+["A physical map mainly shows:",["Natural features","Election results","Population only","Languages only"],0],
+["The Rajya Sabha is the:",["Upper House of Parliament","Lower House","Supreme Court","State Cabinet"],0],
+["Psychology studies:",["Behaviour and mental processes","Only rocks","Only markets","Only climate"],0],
+["The Renaissance began in:",["Europe","South America","Australia","Antarctica"],0],
+["Democratic participation can include:",["Voting","Only taxation","Only military service","Only trade"],0]
+],
+
+2: [
+["The Constitution of India came into effect on:",["15 August 1947","26 January 1950","26 November 1949","2 October 1950"],1],
+["Monsoon rainfall is especially important for:",["Agriculture and water resources","Only mining","Only astronomy","Only shipping"],0],
+["The judiciary primarily:",["Interprets laws","Collects taxes","Prints currency","Runs schools"],0],
+["The Industrial Revolution began first in:",["Britain","India","Brazil","Japan"],0],
+["Socialisation refers to:",["Learning social norms and behaviour","Migration only","Economic growth only","Weather change"],0],
+["Latitude measures distance:",["North or south of Equator","East or west of Greenwich","Above sea level","Below sea level"],0],
+["A federal system divides powers between:",["Levels of government","Only courts","Only private firms","Only villages"],0],
+["Population density means:",["People per unit area","Births per year","Deaths per year","Migration only"],0],
+["A diary written during an event is a:",["Primary source","Secondary source","Tertiary source","Statistical model"],0],
+["Solar energy is:",["Renewable","Non-renewable","Fossil fuel","Mineral"],0]
+],
+
+3: [
+["Separation of powers refers to division among:",["Legislature, executive and judiciary","Schools and colleges","Markets and banks","Villages and cities"],0],
+["Urbanisation refers to:",["Growth of towns and cities","Decline of all cities","Only farming","Only migration abroad"],0],
+["Historians use evidence to:",["Construct and interpret accounts of the past","Predict weather","Calculate taxes only","Design machines"],0],
+["Fundamental Rights are protected by the:",["Constitution","Stock exchange","Municipality only","Private companies"],0],
+["Inequality refers to:",["Unequal distribution of resources/opportunities","Equal distribution always","Only population growth","Only migration"],0],
+["Demographic transition studies changes in:",["Birth and death rates","Only rainfall","Only exports","Only elections"],0],
+["Voting behaviour can be influenced by:",["Social and political context","Only weather","Only age of buildings","Only geography"],0],
+["A contemporary letter describing an event is generally a:",["Primary source","Secondary source","Textbook","Forecast"],0],
+["Secularism concerns:",["Relationship between state and religion","Only trade","Only climate","Only language"],0],
+["The Election Commission of India conducts and supervises:",["Elections","Monetary policy","School exams","Bank audits"],0]
+],
+
+4: [
+["Judicial review concerns the power to:",["Examine constitutionality of laws/actions","Set all tax rates","Conduct elections directly","Control weather"],0],
+["A demographic dividend may arise when:",["Working-age population share is relatively high","Birth rate is always zero","There is no workforce","All people are elderly"],0],
+["Corroboration in history means:",["Comparing evidence to assess consistency","Ignoring evidence","Inventing sources","Using only one opinion"],0],
+["Montesquieu is associated with the idea of:",["Separation of powers","Social contract only","Absolute monarchy","Mercantilism"],0],
+["Pressure groups seek to:",["Influence public policy","Form all governments","Replace all courts","Control weather"],0],
+["Urban heat island refers to cities being:",["Warmer than surrounding areas","Always colder","At sea level only","Free from pollution"],0],
+["Historical causation examines:",["Factors contributing to historical events","Only dates","Only maps","Only biographies"],0],
+["Public opinion refers to:",["Collective attitudes on public issues","Only election results","Only government orders","Only court judgments"],0],
+["Federal division of powers is usually specified by:",["Constitution/law","Private contracts","Newspapers","Banks"],0],
+["Migration means:",["Movement of people from one place to another","Only tourism","Only birth","Only trade"],0]
+],
+
+5: [
+["Constitutional democracy combines democratic government with:",["Constitutional limits and rights","Unlimited executive power","No elections","No courts"],0],
+["Historians may revise interpretations when:",["New evidence or methods become available","Evidence disappears","All dates change","Maps become smaller"],0],
+["Hegemony refers broadly to:",["Dominance or leadership of one group/idea","Complete equality","Only military training","Only economic recession"],0],
+["A progressive tax generally means the tax rate:",["Rises as taxable income rises","Falls as income rises","Is always zero","Is identical for everyone"],0],
+["Human development considers:",["Health, education and standard of living","Only GDP","Only population","Only exports"],0],
+["Checks and balances are intended to:",["Limit concentration of power","Remove all institutions","End elections","Increase monopoly"],0],
+["Historiography is the study of:",["How history is written and interpreted","Only ancient weapons","Only geography","Only population"],0],
+["Structural inequality refers to inequality embedded in:",["Institutions and social structures","Only individual choices","Weather systems","Planetary motion"],0],
+["Political legitimacy refers to:",["Accepted rightfulness of authority","Only military strength","Only economic growth","Only election turnout"],0],
+["Sustainable development seeks to balance present needs with:",["Future generations' needs","Only profit","Only population growth","Only industrial output"],0]
+]
+
+},
+
+XII: {
+
+1: [
+["The study of sources and interpretation of the past is central to:",["History","Physics","Accounting","Biology"],0],
+["The Indian Constitution establishes India as a:",["Sovereign democratic republic","Absolute monarchy","Military state","Colonial territory"],0],
+["The study of spatial patterns and human-environment relations is:",["Geography","History","Economics only","Psychology"],0],
+["Political theory studies concepts such as:",["Power, justice and liberty","Only rainfall","Only accounting","Only chemistry"],0],
+["A primary historical source is:",["Evidence produced during the period studied","A modern textbook only","A later summary only","A fictional prediction"],0],
+["GDP per capita is calculated by dividing GDP by:",["Population","Area","Exports","Tax rate"],0],
+["Social institutions include:",["Family and education","Only rivers","Only markets","Only mountains"],0],
+["A map scale represents:",["Relationship between map and ground distance","Population only","Climate only","Election turnout"],0],
+["The legislature primarily performs:",["Law-making functions","Weather forecasting","Judicial review only","Bank lending"],0],
+["Culture includes:",["Shared beliefs, values and practices","Only buildings","Only income","Only geography"],0]
+],
+
+2: [
+["A constitutional government is limited by:",["Constitution and law","No rules","Private companies","Only markets"],0],
+["Fundamental Rights are intended to protect:",["Individual freedoms and equality","Only exports","Only businesses","Only climate"],0],
+["The Green Revolution is associated with:",["Increased agricultural productivity","Industrial pollution only","Urban planning only","Ocean currents"],0],
+["A social movement generally seeks:",["Social or political change","Only private profit","Only tourism","Only weather change"],0],
+["The monsoon is a:",["Seasonal wind system","Permanent ocean current","Mountain range","River"],0],
+["Opportunity cost in economics means:",["Value of the next best alternative","Total revenue","Tax rate","Fixed capital"],0],
+["Secularism addresses:",["State-religion relations and equal treatment","Only trade","Only geography","Only climate"],0],
+["A federal constitution divides powers between:",["Different levels of government","Only political parties","Only courts","Only schools"],0],
+["A demographic indicator is:",["Fertility rate","Mountain height","GDP deflator only","Election symbol"],0],
+["A secondary source generally:",["Interprets or analyses primary evidence","Was created during the event only","Is always fictional","Cannot contain evidence"],0]
+],
+
+3: [
+["The doctrine of separation of powers seeks to:",["Distribute governmental powers","Concentrate all powers","End legislation","Remove courts"],0],
+["Judicial review allows courts to:",["Examine constitutional validity","Set market prices","Collect income tax","Conduct censuses"],0],
+["A census is primarily used to collect:",["Population data","Only rainfall data","Only election results","Only trade data"],0],
+["Urbanisation can create challenges involving:",["Housing, transport and infrastructure","Only farming","Only forests","Only oceans"],0],
+["Historiography examines:",["Interpretations and methods of historians","Only ancient coins","Only maps","Only weather"],0],
+["A pressure group differs from a political party because it generally:",["Seeks influence without primarily seeking governmental office","Always forms the government","Controls courts","Runs elections"],0],
+["Human development is broader than GDP because it includes:",["Health and education dimensions","Only exports","Only industrial output","Only tax collection"],0],
+["A demographic transition commonly involves changes in:",["Birth and death rates","Only migration","Only rainfall","Only trade"],0],
+["Political participation includes:",["Voting and civic engagement","Only paying bills","Only travelling","Only shopping"],0],
+["A social institution is:",["An established pattern organising social life","Only a building","Only a political party","Only a company"],0]
+],
+
+4: [
+["Constitutionalism emphasises:",["Limited government and constitutional rules","Unlimited power","No rights","No institutions"],0],
+["The principle of rule of law means:",["Law applies according to established legal principles","Leaders are above law","Courts have no role","Only businesses follow law"],0],
+["A historiographical debate may arise because historians:",["Interpret evidence differently","Never use evidence","Only copy each other","Cannot revise views"],0],
+["Sustainable development requires consideration of:",["Economic, social and environmental dimensions","Only profit","Only population","Only exports"],0],
+["A pressure group may use:",["Petitions and advocacy","Only military force","Only taxation","Only judicial appointments"],0],
+["Migration may be caused by:",["Economic, social, environmental or political factors","Only rainfall","Only language","Only age"],0],
+["A federal arrangement is designed partly to:",["Accommodate multiple levels/regions of government","Abolish local government","Remove constitutions","End elections"],0],
+["Human development indicators commonly include:",["Life expectancy, education and income","Only exports","Only tax revenue","Only rainfall"],0],
+["Historical evidence should ideally be:",["Critically evaluated and contextualised","Accepted without question","Ignored","Invented"],0],
+["Public policy refers to:",["Government decisions/actions addressing public issues","Only private contracts","Only personal choices","Only weather forecasts"],0]
+],
+
+5: [
+["Legitimacy of political authority concerns whether authority is:",["Accepted as rightful","Always popular with everyone","Military only","Economically profitable only"],0],
+["Structural inequality can persist through:",["Institutions, norms and unequal access","Only individual weather conditions","Only geography","Only technology"],0],
+["Historians use historiography to examine:",["Changing interpretations of the past","Only population counts","Only map scales","Only GDP"],0],
+["A sustainable development policy may involve:",["Balancing present welfare and future environmental needs","Maximising one resource without limit","Ignoring pollution","Eliminating all industry"],0],
+["Checks and balances help prevent:",["Concentration of governmental power","All legislation","All elections","Economic growth"],0],
+["A progressive tax system generally imposes:",["Higher rates at higher income levels","The same rate in every case","No tax on income","Only indirect taxes"],0],
+["Demographic dividend requires appropriate investment in:",["Education, health and employment","Only tourism","Only exports","Only roads"],0],
+["A primary source's usefulness depends partly on:",["Context, provenance and purpose","Its length only","Its age only","Its colour"],0],
+["Hegemony can involve dominance through:",["Institutions, culture or ideas as well as power","Only weather","Only population","Only mathematics"],0],
+["Political accountability means public officials can be:",["Held responsible for their decisions/actions","Exempt from all review","Removed from all law","Above institutions"],0]
+]
+
+}
+
+}
+
+};
+
+
+/* =========================================================
+   ELEMENT REFERENCES
+========================================================= */
+
+const startScreen = document.getElementById("startScreen");
+const gameScreen = document.getElementById("gameScreen");
+
+const gradeSelect = document.getElementById("grade");
+const streamGroup = document.getElementById("streamGroup");
+const streamSelect = document.getElementById("stream");
+
+const pookieElement = document.getElementById("pookie");
+const gameArea = document.getElementById("gameArea");
+const world = document.getElementById("world");
+
+const questionModal = document.getElementById("questionModal");
+const levelModal = document.getElementById("levelModal");
+const gameOverModal = document.getElementById("gameOverModal");
+
+const pauseOverlay = document.getElementById("pauseOverlay");
+
+const questionText = document.getElementById("questionText");
+const optionsContainer = document.getElementById("optionsContainer");
+
+const timerText = document.getElementById("timerText");
+const timerFill = document.getElementById("timerFill");
+
+const feedback = document.getElementById("feedback");
+
+const toast = document.getElementById("toast");
+
+
+/* =========================================================
+   GRADE / STREAM DISPLAY
+========================================================= */
+
+gradeSelect.addEventListener("change", function() {
+
+    if (this.value === "11" || this.value === "12") {
+
+        streamGroup.style.display = "block";
+
+    } else {
+
+        streamGroup.style.display = "none";
+        streamSelect.value = "";
+
+    }
+
+});
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+function startGame() {
+
+    playerName = document.getElementById("playerName").value.trim();
+    grade = gradeSelect.value;
+
+    if (!playerName) {
+
+        alert("Please enter the player's name.");
+
+        return;
+    }
+
+    if (!grade) {
+
+        alert("Please select a grade.");
+
+        return;
+    }
+
+    if ((grade === "11" || grade === "12") && !streamSelect.value) {
+
+        alert("Please select a stream.");
+
+        return;
+    }
+
+    stream = streamSelect.value;
+
+    lives = 3;
+    score = 0;
+    cookies = 0;
+
+    currentLevel = 1;
+
+    questionsAnswered = 0;
+
+    gameRunning = true;
+    paused = false;
+
+    player.y = 0;
+    player.vy = 0;
+    player.onGround = true;
+
+    obstacleActive = false;
+    nextObstacleTimer = 2.5;
+
+    startScreen.style.display = "none";
+    gameScreen.style.display = "block";
+
+    document.getElementById("hudName").textContent = playerName;
+    document.getElementById("hudGrade").textContent = "Grade " + grade;
+
+    const streamBox = document.getElementById("hudStreamBox");
+
+    if (grade === "11" || grade === "12") {
+
+        streamBox.style.display = "block";
+        document.getElementById("hudStream").textContent = stream;
+
+    } else {
+
+        streamBox.style.display = "none";
+
+    }
+
+    updateHUD();
+
+    prepareLevel(1);
+
+    spawnInitialCookies();
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+/* =========================================================
+   GET QUESTION BANK
+========================================================= */
+
+function getQuestionBank(level) {
+
+    if (grade === "11" || grade === "12") {
+
+        return STREAM_BANK[stream][grade === "11" ? "XI" : "XII"][level];
+
+    }
+
+    return JUNIOR_BANK[level];
+
+}
+
+
+/* =========================================================
+   PREPARE LEVEL
+========================================================= */
+
+function prepareLevel(level) {
+
+    currentLevel = level;
+
+    questionsAnswered = 0;
+
+    currentQuestionIndex = 0;
+
+    obstacleActive = false;
+
+    nextObstacleTimer = 2.5;
+
+    const bank = getQuestionBank(level);
+
+    /*
+       Shuffle the question bank so the order changes,
+       while every question is still used only once.
+    */
+
+    levelQuestions = shuffle([...bank]).slice(0, 10);
+
+    updateHUD();
+
+    showLevelIntro(level);
+
+}
+
+
+/* =========================================================
+   LEVEL INTRO
+========================================================= */
+
+function showLevelIntro(level) {
+
+    const data = LEVELS[level];
+
+    document.getElementById("levelModalTitle").textContent =
+        `Level ${level}: ${data.name}`;
+
+    document.getElementById("levelStats").innerHTML = `
+        <strong>⚡ Speed:</strong> ${data.speed}×<br>
+        <strong>⏱ Question Time:</strong> ${data.time} seconds<br>
+        <strong>❓ Questions:</strong> 10<br>
+        <strong>🍪 Cookies:</strong> Lots of cookies are waiting!
+    `;
+
+    const buttons = document.getElementById("levelButtons");
+
+    buttons.innerHTML = `
+        <button class="level-btn" onclick="closeLevelIntro()">
+            🚀 Start Level ${level}
+        </button>
+    `;
+
+    levelModal.style.display = "flex";
+
+    paused = true;
+
+}
+
+
+/* =========================================================
+   CLOSE LEVEL INTRO
+========================================================= */
+
+function closeLevelIntro() {
+
+    levelModal.style.display = "none";
+
+    paused = false;
+
+    nextObstacleTimer = 2;
+
+}
+
+
+/* =========================================================
+   SHUFFLE
+========================================================= */
+
+function shuffle(array) {
+
+    for (let i = array.length - 1; i > 0; i--) {
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [array[i], array[j]] = [array[j], array[i]];
+
+    }
+
+    return array;
+
+}
+
+
+/* =========================================================
+   UPDATE HUD
+========================================================= */
+
+function updateHUD() {
+
+    const data = LEVELS[currentLevel];
+
+    document.getElementById("hudLevel").textContent = currentLevel;
+
+    document.getElementById("hudSpeed").textContent =
+        data.speed + "×";
+
+    document.getElementById("hudCookies").textContent =
+        cookies;
+
+    document.getElementById("hudScore").textContent =
+        score;
+
+    document.getElementById("hudLives").textContent =
+        lives;
+
+    document.getElementById("hudProgress").textContent =
+        questionsAnswered + "/10";
+
+}
+
+
+/* =========================================================
+   COOKIE SYSTEM
+========================================================= */
+
+function spawnInitialCookies() {
+
+    cookiesArray.forEach(c => {
+
+        if (c.element) {
+            c.element.remove();
+        }
+
+    });
+
+    cookiesArray = [];
+
+    /*
+       Increased amount:
+       45 cookies are placed in the forest initially.
+    */
+
+    for (let i = 0; i < 45; i++) {
+
+        createCookie(
+            window.innerWidth * (0.35 + Math.random() * 1.5)
+        );
+
+    }
+
+}
+
+
+/* Create individual cookie */
+
+function createCookie(startX) {
+
+    const el = document.createElement("div");
+
+    el.className = "cookie";
+
+    const heightClass =
+        ["low1","low1","low2","low2","low3","low4"]
+        [Math.floor(Math.random() * 6)];
+
+    el.classList.add(heightClass);
+
+    el.textContent = "🍪";
+
+    const x = Math.max(
+        startX,
+        gameArea.clientWidth * 0.35
+    );
+
+    el.style.left = x + "px";
+
+    world.appendChild(el);
+
+    const cookieObject = {
+
+        id: cookieId++,
+
+        x: x,
+
+        speedOffset:
+            Math.random() * 1.5,
+
+        element: el
+
+    };
+
+    cookiesArray.push(cookieObject);
+
+}
+
+
+/* Continuous cookie spawning */
+
+function maintainCookies() {
+
+    /*
+       Keep a large number of cookies in the forest.
+    */
+
+    while (cookiesArray.length < 40) {
+
+        createCookie(
+            gameArea.clientWidth + 100 +
+            Math.random() * 500
+        );
+
+    }
+
+}
+
+
+/* Move and collect cookies */
+
+function updateCookies(dt) {
+
+    for (let i = cookiesArray.length - 1; i >= 0; i--) {
+
+        const c = cookiesArray[i];
+
+        c.x -=
+            (2.5 + c.speedOffset) *
+            LEVELS[currentLevel].speed *
+            dt;
+
+        c.element.style.left =
+            c.x + "px";
+
+        /*
+           Cookie collision zone around Pookie.
+           Because cookies are low, they can be collected
+           while running or jumping.
+        */
+
+        const pookieLeft =
+            gameArea.clientWidth * 0.12;
+
+        const pookieRight =
+            pookieLeft + 72;
+
+        const cookieLeft = c.x;
+        const cookieRight = c.x + 30;
+
+        if (
+            cookieRight > pookieLeft &&
+            cookieLeft < pookieRight &&
+            Math.abs(
+                parseFloat(
+                    c.element.getBoundingClientRect().bottom
+                ) -
+                pookieElement.getBoundingClientRect().bottom
+            ) < 80
+        ) {
+
+            collectCookie(i);
+
+            continue;
+
+        }
+
+        if (c.x < -70) {
+
+            c.element.remove();
+
+            cookiesArray.splice(i,1);
+
+        }
+
+    }
+
+    maintainCookies();
+
+}
+
+
+/* Collect cookie */
+
+function collectCookie(index) {
+
+    const c = cookiesArray[index];
+
+    if (c && c.element) {
+        c.element.remove();
+    }
+
+    cookiesArray.splice(index,1);
+
+    /*
+       Each cookie collected gives 5 cookies.
+    */
+
+    cookies += 5;
+
+    score += 2;
+
+    updateHUD();
+
+}
+
+
+/* =========================================================
+   JUMP PHYSICS
+========================================================= */
+
+function jump() {
+
+    if (!gameRunning || paused || questionActive) {
+        return;
+    }
+
+    /*
+       IMPORTANT FIX:
+
+       Positive Y = upward movement.
+
+       Pookie's bottom value is increased while jumping.
+       Gravity decreases velocity until Pookie lands.
+
+       This prevents the previous problem where pressing
+       ArrowUp made the character move DOWN.
+    */
+
+    if (player.onGround) {
+
+        player.vy = player.jumpPower;
+
+        player.onGround = false;
+
+    }
+
+}
+
+
+/* Keyboard controls */
+
+document.addEventListener("keydown", function(event) {
+
+    if (
+        event.code === "ArrowUp" ||
+        event.code === "Space"
+    ) {
+
+        event.preventDefault();
+
+        jump();
+
+    }
+
+});
+
+
+/* Touch/click jump */
+
+document.getElementById("jumpButton").addEventListener(
+    "pointerdown",
+    function(event) {
+
+        event.preventDefault();
+
+        jump();
+
+    }
+);
+
+
+/* =========================================================
+   PLAYER PHYSICS
+========================================================= */
+
+function updatePlayer(dt) {
+
+    if (!gameRunning || paused || questionActive) {
+        return;
+    }
+
+    if (!player.onGround) {
+
+        /*
+           Gravity pulls velocity downward.
+           Since upward velocity starts positive,
+           Pookie first rises and then falls.
+        */
+
+        player.vy -= player.gravity * dt;
+
+        player.y += player.vy * dt;
+
+        /*
+           Ground level.
+        */
+
+        if (player.y <= 0) {
+
+            player.y = 0;
+
+            player.vy = 0;
+
+            player.onGround = true;
+
+        }
+
+    }
+
+    /*
+       This is the actual vertical positioning.
+
+       Pookie normally sits at bottom: 88px.
+
+       During jump:
+       bottom = 88px + player.y
+
+       Therefore a positive player.y moves Pookie UP.
+    */
+
+    pookieElement.style.bottom =
+        (88 + player.y) + "px";
+
+}
+
+
+/* =========================================================
+   OBSTACLE SYSTEM
+========================================================= */
+
+function spawnObstacle() {
+
+    if (
+        obstacleActive ||
+        questionActive ||
+        paused ||
+        !gameRunning
+    ) {
+        return;
+    }
+
+    obstacleActive = true;
+
+    obstacleX = gameArea.clientWidth + 50;
+
+    const obstacle = document.createElement("div");
+
+    obstacle.className = "obstacle";
+
+    obstacle.id = "currentObstacle";
+
+    obstacle.textContent = "🪵";
+
+    obstacle.style.right = "auto";
+
+    obstacle.style.left =
+        obstacleX + "px";
+
+    world.appendChild(obstacle);
+
+}
+
+
+/* Move obstacle */
+
+function updateObstacle(dt) {
+
+    if (!obstacleActive || questionActive || paused) {
+        return;
+    }
+
+    const obstacle =
+        document.getElementById("currentObstacle");
+
+    if (!obstacle) {
+
+        obstacleActive = false;
+
+        return;
+
+    }
+
+    obstacleX -=
+        6 *
+        LEVELS[currentLevel].speed *
+        dt;
+
+    obstacle.style.left =
+        obstacleX + "px";
+
+    const pookieLeft =
+        gameArea.clientWidth * 0.12;
+
+    /*
+       When obstacle reaches Pookie,
+       open an academic question.
+    */
+
+    if (
+        obstacleX < pookieLeft + 70 &&
+        obstacleX > pookieLeft - 70
+    ) {
+
+        askQuestion();
+
+    }
+
+    if (obstacleX < -120) {
+
+        obstacle.remove();
+
+        obstacleActive = false;
+
+        nextObstacleTimer =
+            1.5 + Math.random() * 2;
+
+    }
+
+}
+
+
+/* =========================================================
+   QUESTION SYSTEM
+========================================================= */
+
+function askQuestion() {
+
+    if (questionActive) {
+        return;
+    }
+
+    questionActive = true;
+
+    paused = true;
+
+    clearInterval(timerInterval);
+
+    const question =
+        levelQuestions[currentQuestionIndex];
+
+    questionText.textContent =
+        question[0];
+
+    optionsContainer.innerHTML = "";
+
+    feedback.textContent = "";
+
+    question[1].forEach(
+        function(optionText, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.className = "option";
+
+            button.textContent =
+                String.fromCharCode(65 + index) +
+                ". " +
+                optionText;
+
+            button.onclick =
+                function() {
+
+                    handleAnswer(index);
+
+                };
+
+            optionsContainer.appendChild(button);
+
+        }
+    );
+
+    questionModal.style.display = "flex";
+
+    startQuestionTimer();
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function startQuestionTimer() {
+
+    const seconds =
+        LEVELS[currentLevel].time;
+
+    timerDuration = seconds * 1000;
+
+    questionStartTime =
+        performance.now();
+
+    timerText.textContent =
+        seconds;
+
+    timerFill.style.width =
+        "100%";
+
+    timerInterval =
+        setInterval(
+            updateQuestionTimer,
+            100
+        );
+
+}
+
+
+/* Timer update */
+
+function updateQuestionTimer() {
+
+    if (!questionActive) {
+        return;
+    }
+
+    const elapsed =
+        performance.now() -
+        questionStartTime;
+
+    const remaining =
+        Math.max(
+            0,
+            timerDuration - elapsed
+        );
+
+    const secondsLeft =
+        Math.ceil(
+            remaining / 1000
+        );
+
+    timerText.textContent =
+        secondsLeft;
+
+    const percent =
+        (remaining / timerDuration) * 100;
+
+    timerFill.style.width =
+        percent + "%";
+
+    if (remaining <= 0) {
+
+        clearInterval(timerInterval);
+
+        handleTimeout();
+
+    }
+
+}
+
+
+/* =========================================================
+   HANDLE ANSWER
+========================================================= */
+
+function handleAnswer(selectedIndex) {
+
+    if (!questionActive) {
+        return;
+    }
+
+    clearInterval(timerInterval);
+
+    const question =
+        levelQuestions[currentQuestionIndex];
+
+    const correctIndex =
+        question[2];
+
+    /*
+       Disable all buttons immediately.
+    */
+
+    document
+        .querySelectorAll(".option")
+        .forEach(
+            btn => btn.disabled = true
+        );
+
+    if (selectedIndex === correctIndex) {
+
+        cookies += 20;
+
+        score += 50;
+
+        feedback.innerHTML =
+            "✅ Correct! +20 cookies and +50 points!";
+
+        showToast(
+            "🍪 Correct! Pookie got 20 cookies!"
+        );
+
+    } else {
+
+        lives--;
+
+        feedback.innerHTML =
+            "❌ Wrong answer! You lost 1 life.";
+
+        showToast(
+            "💔 Wrong answer — 1 life lost."
+        );
+
+        updateHUD();
+
+        if (lives <= 0) {
+
+            setTimeout(
+                gameOver,
+                700
+            );
+
+            return;
+
+        }
+
+    }
+
+    updateHUD();
+
+    finishQuestionAfterDelay();
+
+}
+
+
+/* =========================================================
+   TIMEOUT
+========================================================= */
+
+function handleTimeout() {
+
+    if (!questionActive) {
+        return;
+    }
+
+    /*
+       The question automatically disappears.
+       One life is lost.
+       The question is counted as completed.
+    */
+
+    lives--;
+
+    feedback.innerHTML =
+        "⏰ Time's up! You lost 1 life.";
+
+    showToast(
+        "⏰ Time's up! 1 life lost."
+    );
+
+    updateHUD();
+
+    /*
+       Automatically close the question.
+    */
+
+    finishQuestionAfterDelay();
+
+}
+
+
+/* =========================================================
+   COMPLETE QUESTION
+========================================================= */
+
+function finishQuestionAfterDelay() {
+
+    setTimeout(
+        function() {
+
+            questionModal.style.display =
+                "none";
+
+            questionActive = false;
+
+            /*
+               This question is now used and will
+               never appear again during this level.
+            */
+
+            questionsAnswered++;
+
+            currentQuestionIndex++;
+
+            updateHUD();
+
+            if (lives <= 0) {
+
+                gameOver();
+
+                return;
+
+            }
+
+            if (questionsAnswered >= 10) {
+
+                finishLevel();
+
+                return;
+
+            }
+
+            /*
+               Remove the hurdle.
+            */
+
+            const obstacle =
+                document.getElementById(
+                    "currentObstacle"
+                );
+
+            if (obstacle) {
+                obstacle.remove();
+            }
+
+            obstacleActive = false;
+
+            nextObstacleTimer =
+                1.5 + Math.random() * 2;
+
+            /*
+               Resume running.
+            */
+
+            paused = false;
+
+        },
+        700
+    );
+
+}
+
+
+/* =========================================================
+   LEVEL COMPLETE
+========================================================= */
+
+function finishLevel() {
+
+    questionActive = false;
+
+    paused = true;
+
+    questionModal.style.display =
+        "none";
+
+    const earnedBonus = 50;
+
+    cookies += earnedBonus;
+
+    score += 100;
+
+    updateHUD();
+
+    document.getElementById(
+        "levelModalTitle"
+    ).textContent =
+        `🎉 Level ${currentLevel} Complete!`;
+
+    document.getElementById(
+        "levelStats"
+    ).innerHTML = `
+        <strong>🍪 Cookies:</strong> ${cookies}<br>
+        <strong>⭐ Score:</strong> ${score}<br>
+        <strong>❤️ Lives Remaining:</strong> ${lives}<br>
+        <strong>❓ Questions Completed:</strong> 10/10<br>
+        <strong>🎁 Level Bonus:</strong> +${earnedBonus} cookies
+    `;
+
+    const buttons =
+        document.getElementById(
+            "levelButtons"
+        );
+
+    if (currentLevel < 4) {
+
+        buttons.innerHTML = `
+            <button class="level-btn"
+                onclick="goToNextLevel()">
+                🚀 Start Level ${currentLevel + 1}
+            </button>
+        `;
+
+    } else if (currentLevel === 4) {
+
+        const unlocked =
+            localStorage.getItem(
+                "pookieProUnlocked"
+            ) === "true";
+
+        if (unlocked) {
+
+            buttons.innerHTML = `
+                <button class="level-btn"
+                    onclick="goToNextLevel()">
+                    👑 Start Pro Level
+                </button>
+            `;
+
+        } else {
+
+            buttons.innerHTML = `
+
+                <p style="
+                    margin-bottom:15px;
+                    line-height:1.5;
+                ">
+                    🔒 <strong>Pro Level</strong> is now unlocked
+                    for purchase.
+                    <br>
+                    Complete the demo purchase to continue.
+                </p>
+
+                <button class="level-btn"
+                    onclick="purchaseProLevel()">
+                    👑 Unlock Pro Level – ₹99 (Demo)
+                </button>
+
+            `;
+
+        }
+
+    } else {
+
+        buttons.innerHTML = `
+
+            <button class="level-btn"
+                onclick="finishGame()">
+                🏆 Complete Quest
+            </button>
+
+        `;
+
+    }
+
+    levelModal.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   NEXT LEVEL
+========================================================= */
+
+function goToNextLevel() {
+
+    levelModal.style.display =
+        "none";
+
+    if (currentLevel < 5) {
+
+        prepareLevel(
+            currentLevel + 1
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PRO PURCHASE
+========================================================= */
+
+function purchaseProLevel() {
+
+    /*
+       DEMO PAYMENT ONLY.
+
+       A real payment system should NOT be implemented
+       using only client-side HTML/JavaScript.
+
+       For a real deployment, connect this button to
+       a secure payment gateway such as Razorpay/Stripe
+       with a backend verification system.
+
+       Example production flow:
+
+       1. Create order on secure server.
+       2. Open Razorpay/Stripe checkout.
+       3. Verify payment on server.
+       4. Mark Pro access against the player's account.
+
+       This demo simply stores an unlock flag locally.
+    */
+
+    const confirmPurchase =
+        confirm(
+            "Demo purchase: Unlock Pro Level for ₹99?\n\n" +
+            "No real money will be charged."
+        );
+
+    if (!confirmPurchase) {
+        return;
+    }
+
+    localStorage.setItem(
+        "pookieProUnlocked",
+        "true"
+    );
+
+    showToast(
+        "👑 Pro Level unlocked!"
+    );
+
+    setTimeout(
+        function() {
+
+            levelModal.style.display =
+                "none";
+
+            prepareLevel(5);
+
+        },
+        600
+    );
+
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver() {
+
+    clearInterval(timerInterval);
+
+    questionActive = false;
+
+    gameRunning = false;
+
+    paused = true;
+
+    questionModal.style.display =
+        "none";
+
+    levelModal.style.display =
+        "none";
+
+    document.getElementById(
+        "gameOverMessage"
+    ).textContent =
+        `Well played, ${playerName}! Pookie's cookie adventure has ended.`;
+
+    document.getElementById(
+        "finalStats"
+    ).innerHTML = `
+        <strong>🏆 Level:</strong> ${currentLevel}<br>
+        <strong>🍪 Cookies Collected:</strong> ${cookies}<br>
+        <strong>⭐ Final Score:</strong> ${score}<br>
+        <strong>❓ Questions Completed:</strong>
+        ${questionsAnswered}/10
+    `;
+
+    gameOverModal.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   COMPLETE ENTIRE GAME
+========================================================= */
+
+function finishGame() {
+
+    gameRunning = false;
+
+    paused = true;
+
+    levelModal.style.display =
+        "none";
+
+    document.getElementById(
+        "gameOverMessage"
+    ).textContent =
+        `Congratulations ${playerName}! You completed all five levels of Pookie's Cookie Quest!`;
+
+    document.getElementById(
+        "finalStats"
+    ).innerHTML = `
+        <strong>🏆 All 5 Levels Completed!</strong><br><br>
+        🍪 Total Cookies: ${cookies}<br>
+        ⭐ Final Score: ${score}<br>
+        ❤️ Lives Remaining: ${lives}
+    `;
+
+    gameOverModal.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+function togglePause() {
+
+    if (!gameRunning || questionActive) {
+        return;
+    }
+
+    paused = !paused;
+
+    pauseOverlay.style.display =
+        paused ? "flex" : "none";
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartGame() {
+
+    clearInterval(timerInterval);
+
+    questionModal.style.display =
+        "none";
+
+    levelModal.style.display =
+        "none";
+
+    gameOverModal.style.display =
+        "none";
+
+    pauseOverlay.style.display =
+        "none";
+
+    gameRunning = false;
+
+    paused = false;
+
+    lives = 3;
+    score = 0;
+    cookies = 0;
+
+    currentLevel = 1;
+
+    questionsAnswered = 0;
+
+    currentQuestionIndex = 0;
+
+    obstacleActive = false;
+
+    cookiesArray.forEach(
+        c => {
+            if (c.element) {
+                c.element.remove();
+            }
+        }
+    );
+
+    cookiesArray = [];
+
+    player.y = 0;
+    player.vy = 0;
+    player.onGround = true;
+
+    startGame();
+
+}
+
+
+/* =========================================================
+   BACK TO START
+========================================================= */
+
+function backToStart() {
+
+    clearInterval(timerInterval);
+
+    gameRunning = false;
+
+    questionActive = false;
+
+    gameOverModal.style.display =
+        "none";
+
+    levelModal.style.display =
+        "none";
+
+    pauseOverlay.style.display =
+        "none";
+
+    gameScreen.style.display =
+        "none";
+
+    startScreen.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   TOAST MESSAGE
+========================================================= */
+
+let toastTimeout;
+
+function showToast(message) {
+
+    toast.textContent =
+        message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout =
+        setTimeout(
+            function() {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            1800
+        );
+
+}
+
+
+/* =========================================================
+   MAIN GAME LOOP
+========================================================= */
+
+function gameLoop(timestamp) {
+
+    if (!gameRunning) {
+        return;
+    }
+
+    if (!lastTime) {
+        lastTime = timestamp;
+    }
+
+    let dt =
+        (timestamp - lastTime) /
+        16.6667;
+
+    /*
+       Prevent giant physics jumps if browser tab
+       was inactive.
+    */
+
+    dt = Math.min(dt, 2);
+
+    lastTime = timestamp;
+
+    if (!paused && !questionActive) {
+
+        updatePlayer(dt);
+
+        updateCookies(dt);
+
+        updateObstacle(dt);
+
+        /*
+           Countdown until next hurdle.
+        */
+
+        if (!obstacleActive) {
+
+            nextObstacleTimer -=
+                (dt / 60);
+
+            if (nextObstacleTimer <= 0) {
+
+                spawnObstacle();
+
+            }
+
+        }
+
+    }
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+/* =========================================================
+   RESET GAME LOOP CLOCK WHEN STARTING
+========================================================= */
+
+window.addEventListener(
+    "focus",
+    function() {
+
+        lastTime = performance.now();
+
+    }
+);
+
+
+/* =========================================================
+   PREVENT SPACE FROM SCROLLING
+========================================================= */
+
+window.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.code === "Space" ||
+            event.code === "ArrowUp"
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    },
+    { passive: false }
+);
+
+</script>
+
+</body>
+</html>
